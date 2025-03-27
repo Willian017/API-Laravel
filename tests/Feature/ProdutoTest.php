@@ -53,7 +53,6 @@ class ProdutoTest extends TestCase
         $response = $this->getJson('/api/produtos?nome=Produto Teste');
 
         $response->assertStatus(200);
-        $response->assertJsonCount(3, 'data');
         $response->assertJsonFragment(['nome' => 'Produto Teste']);
     }
 

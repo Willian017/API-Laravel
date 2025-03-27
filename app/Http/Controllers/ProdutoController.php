@@ -7,9 +7,18 @@ use Illuminate\Http\Request;
 
 class ProdutoController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $produtos = Produto::paginate(3);
+        $query = Produto::query();
+
+        if ($request->filled('nome'))
+            $query->where('nome', 'like', '%' . trim($request->nome) . '%');
+
+        $produtos = $query->paginate(3);
+
+        if ($produtos->isEmpty())
+            return response()->json(["message" => "Nenhum produto encontrado"], 404);
+
 
         return response()->json($produtos, 200);
     }
@@ -69,17 +78,5 @@ class ProdutoController extends Controller
         $produto->delete();
 
         return response()->json(["mensagem" => "Produto Deletado com Sucesso"], 200);
-    }
-
-    public function filter(Request $request)
-    {
-        $query = Produto::query();
-
-        if ($request->filled('nome'))
-            $query->where('nome', 'like', '%' . $request->nome . '%');
-
-        $produtos = $query->paginate(3);
-
-        return response()->json($produtos, 200);
     }
 }
