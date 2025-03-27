@@ -18,54 +18,68 @@ class ProdutoController extends Controller
     {
         $produto = Produto::find($request->id);
 
-        return $produto;
+        if (!$produto)
+            return response()->json(["erro" => "Produto não encontrado"], 404);
+
+
+        return response()->json($produto, 200);
     }
 
     public function store(Request $request)
     {
-        Produto::create([
-            "nome" => $request->nome,
-            "descricao" => $request->descricao,
-            "preco" => $request->preco,
-            "estoque" => $request->estoque
+        $dados = $request->validate([
+            "nome" => "required|string|max:255",
+            "descricao" => "nullable|string",
+            "preco" => "required|numeric|min:0",
+            "estoque" => "required|integer|min:0"
         ]);
 
-        return response(["Produto Criado com Sucesso"], 200);
+        $produto = Produto::create($dados);
+
+        return response()->json(["mensagem" => "Produto Criado com Sucesso", "produto" => $produto], 201);
     }
 
     public function update(Request $request)
     {
         $produto = Produto::find($request->id);
 
-        $produto->nome = $request->nome;
-        $produto->descricao = $request->descricao;
-        $produto->preco = $request->preco;
-        $produto->estoque = $request->estoque;
+        if (!$produto)
+            return response()->json(["erro" => "Produto não encontrado"], 404);
 
-        $produto->save();
 
-        return response(["Produto Atualizado com Sucesso"], 200);
+        $dados = $request->validate([
+            "nome" => "required|string|max:255",
+            "descricao" => "nullable|string",
+            "preco" => "required|numeric|min:0",
+            "estoque" => "required|integer|min:0"
+        ]);
+
+        $produto->update($dados);
+
+        return response()->json(["mensagem" => "Produto Atualizado com Sucesso", "produto" => $produto], 200);
     }
 
     public function destroy(Request $request)
     {
         $produto = Produto::find($request->id);
 
+        if (!$produto)
+            return response()->json(["erro" => "Produto não encontrado"], 404);
+
         $produto->delete();
 
-        return response(["Produto Deletado com Sucesso"], 200);
+        return response()->json(["mensagem" => "Produto Deletado com Sucesso"], 200);
     }
 
     public function filter(Request $request)
     {
         $query = Produto::query();
 
-        if ($request->has('nome')) {
+        if ($request->filled('nome'))
             $query->where('nome', 'like', '%' . $request->nome . '%');
-        }
 
-        $produtos = $query->get();
+        $produtos = $query->paginate(3);
 
-        return response()->json($produtos);
+        return response()->json($produtos, 200);
     }
 }

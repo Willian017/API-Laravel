@@ -8,7 +8,7 @@ Route::get('/produtos', [ProdutoController::class, "index"]);
 
 Route::get('/produtos/{id}', [ProdutoController::class, "show"]);
 
-Route::get('/produtos', [ProdutoController::class, "filter"]);
+Route::get('/produtos?nome=', [ProdutoController::class, "filter"]);
 
 Route::post('/produtos', [ProdutoController::class, "store"]);
 
