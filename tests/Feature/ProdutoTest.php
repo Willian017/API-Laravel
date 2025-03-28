@@ -29,6 +29,10 @@ class ProdutoTest extends TestCase
 
     public function test_criar_um_produto_com_sucesso()
     {
+        $user = \App\Models\User::factory()->create();
+
+        $token = $user->createToken('teste-token')->plainTextToken;
+
         $dados = [
             "nome" => "Produto Teste",
             "descricao" => "Descrição do Produto Teste",
@@ -36,7 +40,9 @@ class ProdutoTest extends TestCase
             "estoque" => 20
         ];
 
-        $response = $this->postJson('/api/produtos', $dados);
+        $response = $this->withHeaders([
+            'Authorization' => 'Bearer ' . $token,
+        ])->postJson('/api/produtos', $dados);
 
         $response->assertStatus(201)
             ->assertJsonFragment(["nome" => "Produto Teste"]);
@@ -58,6 +64,10 @@ class ProdutoTest extends TestCase
 
     public function test_atualizar_um_produto()
     {
+        $user = \App\Models\User::factory()->create();
+
+        $token = $user->createToken('teste-token')->plainTextToken;
+
         $produto = \App\Models\Produto::factory()->create();
 
         $dados = [
@@ -67,9 +77,14 @@ class ProdutoTest extends TestCase
             'estoque' => 20,
         ];
 
-        $response = $this->putJson('/api/produtos/' . $produto->id, $dados);
+        $response = $this->putJson(
+            '/api/produtos/' . $produto->id,
+            $dados,
+            ['Authorization' => 'Bearer ' . $token]
+        );
 
         $response->assertStatus(200);
+
         $response->assertJson([
             'mensagem' => 'Produto Atualizado com Sucesso',
         ]);
@@ -79,11 +94,20 @@ class ProdutoTest extends TestCase
 
     public function test_deletar_um_produto()
     {
+        $user = \App\Models\User::factory()->create();
+
+        $token = $user->createToken('teste-token')->plainTextToken;
+
         $produto = \App\Models\Produto::factory()->create();
 
-        $response = $this->deleteJson('/api/produtos/' . $produto->id);
+        $response = $this->deleteJson(
+            '/api/produtos/' . $produto->id,
+            [],
+            ['Authorization' => 'Bearer ' . $token]
+        );
 
         $response->assertStatus(200);
+
         $response->assertJson([
             'mensagem' => 'Produto Deletado com Sucesso',
         ]);

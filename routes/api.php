@@ -11,20 +11,22 @@ Route::get('/user', function (Request $request) {
 
 //Route::apiResource('/produtos', ProdutoController::class);
 
-Route::get('/produtos', [ProdutoController::class, "index"]);
+Route::get('/produtos', [ProdutoController::class, 'index']);
 
-Route::get('/produtos/{id}', [ProdutoController::class, "show"]);
+Route::get('/produtos/{id}', [ProdutoController::class, 'show']);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/produtos', [ProdutoController::class, 'store']);
 });
 
-Route::put('/produtos/{id}', [ProdutoController::class, "update"]);
+Route::middleware('auth:sanctum')->put('/produtos/{id}', [ProdutoController::class, 'update']);
 
-Route::delete('/produtos/{id}', [ProdutoController::class, "destroy"]);
+Route::middleware('auth:sanctum')->group(function () {
+    Route::delete('/produtos/{id}', [ProdutoController::class, 'destroy']);
+});
 
-Route::post('/registro', [AuthController::class, "registro"]);
+Route::post('/registro', [AuthController::class, 'registro']);
 
-Route::post('/login', [AuthController::class, "login"])->name('login');
+Route::post('/login', [AuthController::class, 'login'])->name('login');
 
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');

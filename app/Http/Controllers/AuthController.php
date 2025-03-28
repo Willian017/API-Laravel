@@ -12,11 +12,21 @@ class AuthController extends Controller
     {
         $fields = $request->validate([
             'name' => 'required|max:255',
-            'email' => 'required|email|unique:users',
+            'email' => 'required|email',
             'password' => 'required|confirmed'
         ]);
 
-        $user = User::create($fields);
+        $existingUser = User::where('email', $request->email)->first();
+
+        if ($existingUser)
+            return response()->json(['message' => 'E-mail já cadastrado'], 400);
+
+
+        $user = User::create([
+            'name' => $fields['name'],
+            'email' => $fields['email'],
+            'password' => bcrypt($fields['password']),
+        ]);
 
         $token = $user->createToken($request->name);
 

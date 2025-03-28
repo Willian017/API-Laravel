@@ -64,6 +64,12 @@ class ProdutoController extends Controller implements HasMiddleware
 
     public function update(Request $request)
     {
+        $user = $request->user();
+
+        if (!$user)
+            return response()->json(['message' => 'Usuário não autenticado'], 401);
+
+
         $produto = Produto::find($request->id);
 
         if (!$produto)
@@ -79,11 +85,19 @@ class ProdutoController extends Controller implements HasMiddleware
 
         $produto->update($dados);
 
-        return response()->json(["mensagem" => "Produto Atualizado com Sucesso", "produto" => $produto], 200);
+        return response()->json([
+            "mensagem" => "Produto Atualizado com Sucesso",
+            "produto" => $produto
+        ], 200);
     }
 
     public function destroy(Request $request)
     {
+        $user = $request->user();
+
+        if (!$user)
+            return response()->json(['message' => 'Usuário não autenticado'], 401);
+
         $produto = Produto::find($request->id);
 
         if (!$produto)
