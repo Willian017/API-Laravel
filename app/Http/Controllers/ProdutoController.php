@@ -3,10 +3,18 @@
 namespace App\Http\Controllers;
 
 use App\Models\Produto;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controllers\Middleware;
+use Illuminate\Routing\Controllers\HasMiddleware;
 
-class ProdutoController extends Controller
+class ProdutoController extends Controller implements HasMiddleware
 {
+    public static function middleware()
+    {
+        new Middleware('auth:sanctum', except: ['index', 'show']);
+    }
+
     public function index(Request $request)
     {
         $query = Produto::query();
@@ -42,6 +50,12 @@ class ProdutoController extends Controller
             "preco" => "required|numeric|min:0",
             "estoque" => "required|integer|min:0"
         ]);
+
+        $user = $request->user();
+
+        if (!$user)
+            return response()->json(['message' => 'Usuário não autenticado'], 401);
+
 
         $produto = Produto::create($dados);
 

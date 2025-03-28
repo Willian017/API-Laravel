@@ -6,10 +6,6 @@
 * Composer
 
 ## Como rodar o projeto baixado
-
-Duplicar o arquivo ".env.example" e renomear para ".env" <br>
-Alterar no arquivo .env as credenciais do banco de dados <br>
-
 Instalar as dependências do projeto
 
 ```
@@ -18,7 +14,11 @@ composer install
 
 Configurar o Banco de Dados
 
-Pegue as informações do arquivo .env.example e coloque no arquivo .env
+
+Duplicar o arquivo ".env.example" e renomear para ".env"
+
+Alterar no arquivo .env as credenciais do banco de dados 
+
 
 Gerar a chave arquivo .env
 
@@ -26,7 +26,7 @@ Gerar a chave arquivo .env
 php artisan key:generate
 ```
 
-Substituir essa key gerada no arquivo .env
+Substituir essa key gerada no arquivo ".env"
 
 Rodar as Migrações
 
