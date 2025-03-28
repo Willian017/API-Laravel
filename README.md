@@ -10,29 +10,39 @@
 Duplicar o arquivo ".env.example" e renomear para ".env" <br>
 Alterar no arquivo .env as credenciais do banco de dados <br>
 
-Instalar as dependências do PHP
-```
+Instalar as dependências do projeto
 
+```
 composer install
 ```
 
-Gerar a chave arquivo .env
-```
+Configurar o Banco de Dados
 
+Pegue as informações do arquivo .env.example e coloque no arquivo .env
+
+Gerar a chave arquivo .env
+
+```
 php artisan key:generate
 ```
 
+Substituir essa key gerada no arquivo .env
 
-## Sequencia para criar o projeto 
-Criar o projeto com Laravel
-````
+Rodar as Migrações
 
-composer create-project laravel/laravel
-````
+```
+php artisan migrate
+```
 
-Alterar no arquivo .env as credenciais do banco de dados <br>
+Inicie o Apache e o MySql
 
-Criar o arquivo de rotas para API
-````
+Rodar em um servidor de teste
+```
+php artisan serve
+```
 
-php artisan install:api
+Rodar as Features
+
+```
+php artisan test --filter ProdutoTest
+```
