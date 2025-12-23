@@ -12,18 +12,12 @@ Route::get('/user', function (Request $request) {
 
 //Route::apiResource('/produtos', ProdutoController::class);
 
-Route::get('/produtos', [ProdutoController::class, 'index']);
-
-Route::get('/produtos/{id}', [ProdutoController::class, 'show']);
-
-Route::middleware('auth:sanctum')->group(function () {
-    Route::post('/produtos', [ProdutoController::class, 'store']);
-});
-
-Route::middleware('auth:sanctum')->put('/produtos/{id}', [ProdutoController::class, 'update']);
-
-Route::middleware('auth:sanctum')->group(function () {
-    Route::delete('/produtos/{id}', [ProdutoController::class, 'destroy']);
+Route::group(['prefix' => '/produtos'], function() {
+    Route::get('', [ProdutoController::class, 'index']);
+    Route::get('/{id}', [ProdutoController::class, 'show']);
+    Route::middleware('auth:sanctum')->post('', [ProdutoController::class, 'store']);
+    Route::middleware('auth:sanctum')->put('/{id}', [ProdutoController::class, 'update']);
+    Route::middleware('auth:sanctum')->delete('/{id}', [ProdutoController::class, 'destroy']);
 });
 
 Route::post('/registro', [AuthController::class, 'registro']);

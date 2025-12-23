@@ -12,9 +12,10 @@ class ProdutoTest extends TestCase
 
     public function test_retornar_produtos_paginados()
     {
+        $per_page = 5;
         Produto::factory()->count(15)->create();
 
-        $response = $this->getJson('/api/produtos');
+        $response = $this->getJson('/api/produtos?per_page='.$per_page);
 
         $response->assertStatus(200)
             ->assertJsonStructure([
@@ -24,7 +25,7 @@ class ProdutoTest extends TestCase
                 'total'
             ]);
 
-        $this->assertCount(3, $response->json('data'));
+        $this->assertCount($per_page, $response->json('data'));
     }
 
     public function test_criar_um_produto_com_sucesso()

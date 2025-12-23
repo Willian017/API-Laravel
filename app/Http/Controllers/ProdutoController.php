@@ -17,12 +17,13 @@ class ProdutoController extends Controller implements HasMiddleware
 
     public function index(Request $request)
     {
+        $per_page = $request->query('per_page',10);
         $query = Produto::query();
 
         if ($request->filled('nome'))
             $query->where('nome', 'like', '%' . trim($request->nome) . '%');
 
-        $produtos = $query->paginate(3);
+        $produtos = $query->paginate($per_page);
 
         if ($produtos->isEmpty())
             return response()->json(["message" => "Nenhum produto encontrado"], 404);
